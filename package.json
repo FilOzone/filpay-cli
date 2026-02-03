@@ -1,0 +1,19 @@
+{
+  "name": "filpay-cli",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "cli.js",
+  "bin": {
+    "filpay": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["filecoin", "payments", "cli", "filecoin-pay"],
+  "author": "",
+  "license": "ISC",
+  "description": "CLI tool for Filecoin Pay withdrawals with proper nonce management",
+  "dependencies": {
+    "@filoz/synapse-sdk": "^0.36.1"
+  }
+}
