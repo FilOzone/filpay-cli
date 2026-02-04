@@ -4,12 +4,17 @@
   "type": "module",
   "main": "cli.js",
   "bin": {
-    "filpay": "./cli.js"
+    "filpay": "cli.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["filecoin", "payments", "cli", "filecoin-pay"],
+  "keywords": [
+    "filecoin",
+    "payments",
+    "cli",
+    "filecoin-pay"
+  ],
   "author": "",
   "license": "ISC",
   "description": "CLI tool for Filecoin Pay withdrawals with proper nonce management",
