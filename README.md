@@ -16,18 +16,31 @@ Complete CLI tool for managing FilecoinPayV1 payments with proper nonce manageme
 
 ## Installation
 
+📦 **npm Package**: [filpay-cli](https://www.npmjs.com/package/filpay-cli)
+
+### Install Globally (Recommended)
+```bash
+npm install -g filpay-cli
+```
+
+Then use anywhere:
+```bash
+filpay balance --account 0x...
+filpay withdraw 1.0 --key YOUR_KEY
+```
+
 ### Quick Start (via npx)
+Run without installing:
 ```bash
-npx github:yourusername/filpay-cli balance --account 0x...
+npx filpay-cli balance --account 0x...
+npx filpay-cli withdraw 1.0 --key YOUR_KEY
 ```
 
-### Install Globally
+### Local Development
 ```bash
-npm install -g .
-```
-
-### Local Usage
-```bash
+git clone https://github.com/FilOzone/filpay-cli.git
+cd filpay-cli
+npm install
 node cli.js <command> [options]
 ```
 
@@ -126,25 +139,6 @@ node cli.js help
 # Link for global usage
 npm link
 ```
-
-## Publishing
-
-To share with other PDP users:
-
-1. **GitHub Release** (recommended):
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin https://github.com/yourusername/filpay-cli.git
-   git push -u origin main
-   ```
-
-2. **npm Package**:
-   ```bash
-   npm publish
-   # Users can then: npx filpay balance --account 0x...
-   ```
 
 ## Resources
 
