@@ -193,7 +193,9 @@ export async function handleRailSettleAll(provider, flags) {
     true
   )
 
-  console.log(c.bright(`\n💳 Settle All Rails\n`))
+  const isPreview = flags.preview
+
+  console.log(c.bright(`\n${isPreview ? '🔍 Preview' : '💳'} Settle All Rails\n`))
   console.log(c.dim(`Address: ${wallet.address}\n`))
 
   // Get all rails as payee
@@ -204,7 +206,7 @@ export async function handleRailSettleAll(provider, flags) {
   const skipped = []
   const failed = []
 
-  // Iterate through each rail and try to settle
+  // Iterate through each rail and calculate settlements
   for (const railSummary of asPayeeRails) {
     const railId = railSummary.railId
 
@@ -222,7 +224,18 @@ export async function handleRailSettleAll(provider, flags) {
         continue
       }
 
-      // Settle the rail
+      // In preview mode, just show what would be settled
+      if (isPreview) {
+        settled.push({ railId, payer, amount: amounts.paymentAmount, fee: amounts.settlementFee })
+        const netAmount = amounts.paymentAmount - amounts.settlementFee
+        console.log(c.info(`→ Rail #${railId} (${payer.substring(0, 10)}...)`))
+        console.log(c.dim(`  Payment:     ${ethers.formatUnits(amounts.paymentAmount, 18)} USDFC`))
+        console.log(c.dim(`  Fee:         ${ethers.formatUnits(amounts.settlementFee, 18)} USDFC`))
+        console.log(c.success(`  Net to you:  ${ethers.formatUnits(netAmount, 18)} USDFC`))
+        continue
+      }
+
+      // Settle the rail (non-preview mode)
       console.log(c.info(`→ Rail #${railId} (${payer.substring(0, 10)}...): Settling ${ethers.formatUnits(amounts.paymentAmount, 18)} USDFC...`))
       const tx = await paymentsService.settle(payer, 'USDFC')
       const receipt = await tx.wait()
@@ -242,11 +255,26 @@ export async function handleRailSettleAll(provider, flags) {
 
   // Summary
   console.log(c.bright(`\n═══════════════════════════════════`))
-  console.log(c.success(`✓ Settled: ${settled.length}`))
-  console.log(c.dim(`⊘ Skipped: ${skipped.length}`))
-  console.log(c.error(`✗ Failed:  ${failed.length}`))
+  if (isPreview) {
+    console.log(c.info(`→ Would settle: ${settled.length}`))
+    console.log(c.dim(`⊘ Would skip:   ${skipped.length}`))
+    if (settled.length > 0) {
+      const totalAmount = settled.reduce((sum, s) => sum + s.amount, 0n)
+      const totalFees = settled.reduce((sum, s) => sum + (s.fee || 0n), 0n)
+      const totalNet = totalAmount - totalFees
+      console.log(c.bright(`\n💰 Settlement Summary:`))
+      console.log(c.dim(`   Total payment:  ${ethers.formatUnits(totalAmount, 18)} USDFC`))
+      console.log(c.dim(`   Total fees:     ${ethers.formatUnits(totalFees, 18)} USDFC`))
+      console.log(c.success(`   Net to you:     ${ethers.formatUnits(totalNet, 18)} USDFC`))
+      console.log(c.warn(`\n⚡ Run without --preview flag to execute settlements`))
+    }
+  } else {
+    console.log(c.success(`✓ Settled: ${settled.length}`))
+    console.log(c.dim(`⊘ Skipped: ${skipped.length}`))
+    console.log(c.error(`✗ Failed:  ${failed.length}`))
 
-  if (settled.length > 0) {
-    console.log(c.bright(`\n💰 Total settled: ${ethers.formatUnits(settled.reduce((sum, s) => sum + s.amount, 0n), 18)} USDFC`))
+    if (settled.length > 0) {
+      console.log(c.bright(`\n💰 Total settled: ${ethers.formatUnits(settled.reduce((sum, s) => sum + s.amount, 0n), 18)} USDFC`))
+    }
   }
 }

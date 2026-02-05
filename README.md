@@ -88,6 +88,9 @@ filpay rails info 123 --key YOUR_KEY
 # Settle a specific rail
 filpay rails settle 0xPayerAddress --key YOUR_KEY
 
+# Preview all settlements (no transactions)
+filpay rails settle-all --key YOUR_KEY --preview
+
 # Auto-settle all rails
 filpay rails settle-all --key YOUR_KEY --yes
 ```
@@ -111,6 +114,7 @@ filpay settle 0xPayerAddress --key YOUR_KEY
 - `--detailed` - Show detailed information
 - `--json` - Output as JSON
 - `--yes` - Skip confirmation prompts
+- `--preview` - Preview settlements without executing transactions
 
 ## Why This Tool?
 
